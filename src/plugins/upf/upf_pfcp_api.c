@@ -53,6 +53,8 @@
 
 extern char *vpe_version_string;
 
+extern pfcp_node_id_t node_id;
+
 typedef struct
 {
   time_t start_time;
@@ -498,6 +500,10 @@ handle_association_setup_request (pfcp_msg_t * req,
   resp.response.cause = PFCP_CAUSE_REQUEST_REJECTED;
 
   init_response_node_id (&resp.response);
+
+  SET_BIT (resp.grp.fields, ASSOCIATION_SETUP_RESPONSE_NODE_ID);
+  resp.response.node_id.type = node_id.type;
+  resp.response.node_id.ip = node_id.ip;
 
   SET_BIT (resp.grp.fields, ASSOCIATION_SETUP_RESPONSE_RECOVERY_TIME_STAMP);
   resp.recovery_time_stamp = psm->start_time;
@@ -2374,6 +2380,10 @@ handle_session_establishment_request (pfcp_msg_t * req,
   memset (&resp, 0, sizeof (resp));
   SET_BIT (resp.grp.fields, SESSION_ESTABLISHMENT_RESPONSE_CAUSE);
   resp.response.cause = PFCP_CAUSE_REQUEST_REJECTED;
+
+  SET_BIT (resp.grp.fields, ASSOCIATION_SETUP_RESPONSE_NODE_ID);
+  resp.response.node_id.type = node_id.type;
+  resp.response.node_id.ip = node_id.ip;
 
   assoc = pfcp_get_association (&msg->request.node_id);
   if (!assoc)

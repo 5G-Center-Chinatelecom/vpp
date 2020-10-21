@@ -35,6 +35,8 @@
 #include <upf/flowtable.h>
 #include <upf/upf_app_db.h>
 
+pfcp_node_id_t node_id;
+
 static clib_error_t *
 upf_pfcp_endpoint_ip_add_del_command_fn (vlib_main_t * vm,
 					 unformat_input_t * main_input,
@@ -103,6 +105,9 @@ upf_pfcp_endpoint_ip_add_del_command_fn (vlib_main_t * vm,
       error = clib_error_return (0, "vnet_upf_pfcp_endpoint_add_del %d", rv);
       break;
     }
+
+    node_id.type = ip46_address_is_ip4 (&ip) ? NID_IPv4 : NID_IPv6;
+    node_id.ip = ip;
 
 done:
   unformat_free (line_input);
