@@ -454,7 +454,6 @@ typedef struct
   clib_bihash_8_8_t in2out;
 
   /* Endpoint dependent sessions lookup tables */
-  clib_bihash_16_8_t out2in_ed;
   clib_bihash_16_8_t in2out_ed;
 
   /* Find-a-user => src address lookup */
@@ -530,7 +529,6 @@ typedef struct snat_main_s
   snat_get_worker_in2out_function_t *worker_in2out_cb;
   snat_get_worker_out2in_function_t *worker_out2in_cb;
   u16 port_per_thread;
-  u32 num_snat_thread;
 
   /* Per thread data */
   snat_main_per_thread_data_t *per_thread_data;
@@ -543,6 +541,9 @@ typedef struct snat_main_s
 
   /* Static mapping pool */
   snat_static_mapping_t *static_mappings;
+
+  /* Endpoint-dependent out2in mappings */
+  clib_bihash_16_8_t out2in_ed;
 
   /* Interface pool */
   snat_interface_t *interfaces;
@@ -1288,6 +1289,8 @@ void nat44_db_init (snat_main_per_thread_data_t * tsm);
  */
 void nat44_db_free (snat_main_per_thread_data_t * tsm);
 
+void nat44_sessions_clear ();
+
 /**
  * @brief Find or create NAT user
  *
@@ -1425,6 +1428,7 @@ typedef struct
   u16 src_port, dst_port;
 } tcp_udp_header_t;
 
+u8 *format_user_kvp (u8 * s, va_list * args);
 #endif /* __included_nat_h__ */
 /*
  * fd.io coding-style-patch-verification: ON

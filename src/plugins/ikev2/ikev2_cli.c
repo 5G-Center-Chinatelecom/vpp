@@ -512,8 +512,8 @@ show_ikev2_profile_command_fn (vlib_main_t * vm,
     if (p->udp_encap)
       vlib_cli_output(vm, "  udp-encap");
 
-    if (p->dst_port != IPSEC_UDP_PORT_NONE)
-      vlib_cli_output(vm, "  ipsec-over-udp port %d", p->dst_port);
+    if (p->ipsec_over_udp_port != IPSEC_UDP_PORT_NONE)
+      vlib_cli_output(vm, "  ipsec-over-udp port %d", p->ipsec_over_udp_port);
   }));
   /* *INDENT-ON* */
 
@@ -683,7 +683,7 @@ ikev2_set_log_level_command_fn (vlib_main_t * vm,
 				vlib_cli_command_t * cmd)
 {
   unformat_input_t _line_input, *line_input = &_line_input;
-  u8 log_level = IKEV2_LOG_NONE;
+  u32 log_level = IKEV2_LOG_NONE;
   clib_error_t *error = 0;
 
   /* Get a line of input. */
