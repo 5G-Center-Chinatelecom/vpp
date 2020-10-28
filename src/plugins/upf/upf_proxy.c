@@ -1065,12 +1065,28 @@ upf_proxy_main_init (vlib_main_t * vm)
     vlib_node_add_next (vm, tcp6_output_node.index,
 			upf_ip6_proxy_server_output_node.index);
 
-  upf_proxy_create (0, 1);
+//  upf_proxy_create (0, 1);
 
   return 0;
 }
 
 VLIB_INIT_FUNCTION (upf_proxy_main_init);
+
+static clib_error_t *
+upf_enable_proxy_command_fn (vlib_main_t * vm, unformat_input_t * input,
+                        vlib_cli_command_t * cmd)
+{
+	clib_error_t *error = NULL;
+        upf_proxy_create (0, 1);
+        return error;
+}
+
+VLIB_CLI_COMMAND (upf_enable_proxy_command, static) =
+{
+        .path = "upf enable proxy",
+        .short_help = "upf enable proxy",
+        .function = upf_enable_proxy_command_fn,
+};
 
 /*
 * fd.io coding-style-patch-verification: ON
